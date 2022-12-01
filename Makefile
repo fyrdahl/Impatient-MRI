@@ -371,6 +371,9 @@ NVCCFLAGS += $(COMMONFLAGS)
 CXXFLAGS  += $(COMMONFLAGS)
 CFLAGS    += $(COMMONFLAGS)
 
+# Add extra flags
+NVCCFLAGS += -fPIE
+
 ifeq ($(nvcc_warn_verbose),1)
 	NVCCFLAGS += $(addprefix --compiler-options ,$(CXXWARN_FLAGS))
 	NVCCFLAGS += --compiler-options -fno-strict-aliasing
