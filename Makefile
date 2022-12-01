@@ -126,7 +126,7 @@ endif
 
 # Default architecture compute capability
 # This will be overrided when DOUBLE_PRECISION is "true".
-CUDA_ARCH := -arch sm_10
+#CUDA_ARCH := -arch sm_10
 
 ifeq ($(OPENMP), "true")
   CXXFLAGS += -fopenmp -DENABLE_OPENMP
@@ -139,7 +139,7 @@ ifeq ($(DOUBLE_PRECISION), "true")
   CXXFLAGS += -DENABLE_DOUBLE_PRECISION
   NVCCFLAGS += -DENABLE_DOUBLE_PRECISION
   # Only sm_13 or above support double precision hardware.
-  CUDA_ARCH := -arch sm_20
+  #CUDA_ARCH := -arch sm_20
 endif
 
 # Override the options given above
@@ -160,7 +160,7 @@ NVCCFLAGS += $(CUDA_ARCH)
 .SUFFIXES : .cu .cu_dbg.o .c_dbg.o .cpp_dbg.o .cu_rel.o .c_rel.o .cpp_rel.o .cubin .ptx
 
 # Add new SM Versions here as devices with new Compute Capability are released
-SM_VERSIONS := sm_10 sm_11 sm_12 sm_13 sm_20
+SM_VERSIONS := sm_52 #sm_10 sm_11 sm_12 sm_13 sm_20
 
 # detect OS
 OSUPPER = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
