@@ -143,8 +143,8 @@ ifeq ($(DOUBLE_PRECISION), "true")
 endif
 
 # Override the options given above
-CUDA_ARCH := -arch sm_10
-CUDA_ARCH := -gencode arch=compute_37,code=sm_37
+CUDA_ARCH := -arch sm_52
+CUDA_ARCH := -gencode arch=compute_52,code=sm_52
 
 ifeq ($(COMPUTE_FLOPS), "true")
   CXXFLAGS += -DENABLE_COMPUTE_FLOPS
@@ -173,9 +173,9 @@ HP_64 =	$(shell uname -m | grep 64)
 
 # Compilers
 ifeq "$(strip $(HP_64))" ""
-   NVCC := $(CUDA_INSTALL_PATH)/bin/nvcc 
+   NVCC := $(CUDA_INSTALL_PATH)/bin/nvcc
 else
-   NVCC := $(CUDA_INSTALL_PATH)/bin/nvcc 
+   NVCC := $(CUDA_INSTALL_PATH)/bin/nvcc
 endif
 
 # Includes
@@ -208,7 +208,7 @@ CWARN_FLAGS := $(CXXWARN_FLAGS) \
 	-Wmain
 
 # Compiler-specific flags
-#NVCCFLAGS := 
+#NVCCFLAGS :=
 CXXFLAGS  += $(CXXWARN_FLAGS)
 CFLAGS    += $(CWARN_FLAGS)
 
@@ -218,7 +218,7 @@ COMMONFLAGS += $(INCLUDES) -DUNIX
 # Debug/release configuration
 ifeq ($(debug),1)
   ifeq ($(profile),1)
-    COMMONFLAGS += -g -pg 
+    COMMONFLAGS += -g -pg
   else
     COMMONFLAGS += -g
   endif
@@ -299,7 +299,7 @@ endif
 
 # If dynamically linking to CUDA and CUDART, we exclude the libraries from the LIB
 ifeq ($(USECUDADYNLIB),1)
-     LIB += ${OPENGLLIB} $(PARAMGLLIB) $(RENDERCHECKGLLIB) $(CUDPPLIB) -ldl -rdynamic 
+     LIB += ${OPENGLLIB} $(PARAMGLLIB) $(RENDERCHECKGLLIB) $(CUDPPLIB) -ldl -rdynamic
 else
 # static linking, we will statically link against CUDA and CUDART
   ifeq ($(USEDRVAPI),1)
@@ -328,7 +328,7 @@ endif
 # FIXME: This is no longer supported.
 ifeq ($(emu), 1)
 	NVCCFLAGS   += -deviceemu --define-macro emu
-	CUDACCFLAGS += 
+	CUDACCFLAGS +=
 	BINSUBDIR   := emu$(BINSUBDIR)
 	# consistency, makes developing easier
 	CXXFLAGS    += -D__DEVICE_EMULATION__ -Demu
@@ -339,7 +339,7 @@ TARGETDIR := $(BINDIR)/$(BINSUBDIR)
 TARGET    := $(TARGETDIR)/$(TARGET)
 LINKLINE   = $(LINKER) -o $(TARGET) $(OBJS) $(LIB) $(COMMONFLAGS)
 
-# check if verbose 
+# check if verbose
 ifeq ($(verbose), 1)
 	VERBOSE :=
 else
@@ -372,7 +372,7 @@ CXXFLAGS  += $(COMMONFLAGS)
 CFLAGS    += $(COMMONFLAGS)
 
 ifeq ($(nvcc_warn_verbose),1)
-	NVCCFLAGS += $(addprefix --compiler-options ,$(CXXWARN_FLAGS)) 
+	NVCCFLAGS += $(addprefix --compiler-options ,$(CXXWARN_FLAGS))
 	NVCCFLAGS += --compiler-options -fno-strict-aliasing
 endif
 
@@ -431,7 +431,7 @@ $(PTXDIR)/%.ptx : $(MRISOLVER)/%.cu ptxdirectory
 # The following definition is a template that gets instantiated for each SM
 # version (sm_10, sm_13, etc.) stored in SMVERSIONS.  It does 2 things:
 # 1. It adds to OBJS a .cu_sm_XX.o for each .cu file it finds in CUFILES_sm_XX.
-# 2. It generates a rule for building .cu_sm_XX.o files from the corresponding 
+# 2. It generates a rule for building .cu_sm_XX.o files from the corresponding
 #    .cu file.
 #
 # The intended use for this is to allow Makefiles that use common.mk to compile
