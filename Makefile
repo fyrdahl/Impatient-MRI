@@ -213,7 +213,7 @@ CXXFLAGS  += $(CXXWARN_FLAGS)
 CFLAGS    += $(CWARN_FLAGS)
 
 # Common flags
-COMMONFLAGS += $(INCLUDES) -DUNIX
+COMMONFLAGS += $(INCLUDES) -DUNIX -fPIE
 
 # Debug/release configuration
 ifeq ($(debug),1)
@@ -370,9 +370,6 @@ NVCCFLAGS += $(CUDACCFLAGS)
 NVCCFLAGS += $(COMMONFLAGS)
 CXXFLAGS  += $(COMMONFLAGS)
 CFLAGS    += $(COMMONFLAGS)
-
-# Add extra flags
-NVCCFLAGS += -fPIE
 
 ifeq ($(nvcc_warn_verbose),1)
 	NVCCFLAGS += $(addprefix --compiler-options ,$(CXXWARN_FLAGS))
