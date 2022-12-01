@@ -73,7 +73,7 @@ endif
 
 # Default architecture compute capability
 # This will be overrided when DOUBLE_PRECISION is "true".
-CUDA_ARCH := -arch sm_10
+CUDA_ARCH := -arch sm_52
 
 #ifeq ($(OPENMP), "true")
 #  CXXFLAGS += -fopenmp -DENABLE_OPENMP
@@ -112,9 +112,9 @@ HP_64 =	$(shell uname -m | grep 64)
 
 # Compilers
 ifeq "$(strip $(HP_64))" ""
-   NVCC := $(CUDA_INSTALL_PATH)/bin/nvcc 
+   NVCC := $(CUDA_INSTALL_PATH)/bin/nvcc
 else
-   NVCC := $(CUDA_INSTALL_PATH)/bin/nvcc 
+   NVCC := $(CUDA_INSTALL_PATH)/bin/nvcc
 endif
 
 # Includes
@@ -147,12 +147,12 @@ CWARN_FLAGS := $(CXXWARN_FLAGS) \
 	-Wmain
 
 # Compiler-specific flags
-#NVCCFLAGS := 
+#NVCCFLAGS :=
 CXXFLAGS  += $(CXXWARN_FLAGS)
 CFLAGS    += $(CWARN_FLAGS)
 
 # Common flags
-COMMONFLAGS += $(INCLUDES) -DUNIX
+COMMONFLAGS += $(INCLUDES) -DUNIX -fPIE
 
 # Debug/release configuration
 ifeq ($(debug),1)
@@ -162,7 +162,7 @@ ifeq ($(debug),1)
 	CFLAGS      += -D_DEBUG -Ddbg
 	BINSUBDIR   := debug
 	LIBSUFFIX   := D
-else 
+else
 	COMMONFLAGS += -O3 # -O2
 	BINSUBDIR   := release
 	LIBSUFFIX   :=
@@ -234,7 +234,7 @@ endif
 
 # If dynamically linking to CUDA and CUDART, we exclude the libraries from the LIB
 ifeq ($(USECUDADYNLIB),1)
-     LIB += ${OPENGLLIB} $(PARAMGLLIB) $(RENDERCHECKGLLIB) $(CUDPPLIB) -ldl -rdynamic 
+     LIB += ${OPENGLLIB} $(PARAMGLLIB) $(RENDERCHECKGLLIB) $(CUDPPLIB) -ldl -rdynamic
 else
 # static linking, we will statically link against CUDA and CUDART
   ifeq ($(USEDRVAPI),1)
@@ -263,7 +263,7 @@ endif
 # Device emulation configuration
 ifeq ($(emu), 1)
 	NVCCFLAGS   += -deviceemu --define-macro emu
-	CUDACCFLAGS += 
+	CUDACCFLAGS +=
 	BINSUBDIR   := emu$(BINSUBDIR)
 	# consistency, makes developing easier
 	CXXFLAGS    += -D__DEVICE_EMULATION__ -Demu
@@ -274,7 +274,7 @@ TARGETDIR := $(BINDIR)/$(BINSUBDIR)
 TARGET    := $(TARGETDIR)/$(TARGET)
 LINKLINE   = $(LINKER) -o $(TARGET) $(OBJS) $(LIB)
 
-# check if verbose 
+# check if verbose
 ifeq ($(verbose), 1)
 	VERBOSE :=
 else
@@ -307,7 +307,7 @@ CXXFLAGS  += $(COMMONFLAGS)
 CFLAGS    += $(COMMONFLAGS)
 
 ifeq ($(nvcc_warn_verbose),1)
-	NVCCFLAGS += $(addprefix --compiler-options ,$(CXXWARN_FLAGS)) 
+	NVCCFLAGS += $(addprefix --compiler-options ,$(CXXWARN_FLAGS))
 	NVCCFLAGS += --compiler-options -fno-strict-aliasing
 endif
 
@@ -366,7 +366,7 @@ $(PTXDIR)/%.ptx : $(SRCDIR)/%.cu ptxdirectory
 # The following definition is a template that gets instantiated for each SM
 # version (sm_10, sm_13, etc.) stored in SMVERSIONS.  It does 2 things:
 # 1. It adds to OBJS a .cu_sm_XX.o for each .cu file it finds in CUFILES_sm_XX.
-# 2. It generates a rule for building .cu_sm_XX.o files from the corresponding 
+# 2. It generates a rule for building .cu_sm_XX.o files from the corresponding
 #    .cu file.
 #
 # The intended use for this is to allow Makefiles that use common.mk to compile
@@ -433,29 +433,29 @@ clobber : clean
 
 # Copyright 1993-2006 NVIDIA Corporation.  All rights reserved.
 #
-# NOTICE TO USER:   
+# NOTICE TO USER:
 #
-# This source code is subject to NVIDIA ownership rights under U.S. and 
-# international Copyright laws.  
+# This source code is subject to NVIDIA ownership rights under U.S. and
+# international Copyright laws.
 #
-# NVIDIA MAKES NO REPRESENTATION ABOUT THE SUITABILITY OF THIS SOURCE 
-# CODE FOR ANY PURPOSE.  IT IS PROVIDED "AS IS" WITHOUT EXPRESS OR 
-# IMPLIED WARRANTY OF ANY KIND.  NVIDIA DISCLAIMS ALL WARRANTIES WITH 
-# REGARD TO THIS SOURCE CODE, INCLUDING ALL IMPLIED WARRANTIES OF 
-# MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE.   
-# IN NO EVENT SHALL NVIDIA BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL, 
-# OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS 
-# OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
-# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
-# OR PERFORMANCE OF THIS SOURCE CODE.  
+# NVIDIA MAKES NO REPRESENTATION ABOUT THE SUITABILITY OF THIS SOURCE
+# CODE FOR ANY PURPOSE.  IT IS PROVIDED "AS IS" WITHOUT EXPRESS OR
+# IMPLIED WARRANTY OF ANY KIND.  NVIDIA DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOURCE CODE, INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE.
+# IN NO EVENT SHALL NVIDIA BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL,
+# OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+# OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+# OR PERFORMANCE OF THIS SOURCE CODE.
 #
-# U.S. Government End Users.  This source code is a "commercial item" as 
-# that term is defined at 48 C.F.R. 2.101 (OCT 1995), consisting  of 
-# "commercial computer software" and "commercial computer software 
-# documentation" as such terms are used in 48 C.F.R. 12.212 (SEPT 1995) 
-# and is provided to the U.S. Government only as a commercial end item.  
-# Consistent with 48 C.F.R.12.212 and 48 C.F.R. 227.7202-1 through 
-# 227.7202-4 (JUNE 1995), all U.S. Government End Users acquire the 
+# U.S. Government End Users.  This source code is a "commercial item" as
+# that term is defined at 48 C.F.R. 2.101 (OCT 1995), consisting  of
+# "commercial computer software" and "commercial computer software
+# documentation" as such terms are used in 48 C.F.R. 12.212 (SEPT 1995)
+# and is provided to the U.S. Government only as a commercial end item.
+# Consistent with 48 C.F.R.12.212 and 48 C.F.R. 227.7202-1 through
+# 227.7202-4 (JUNE 1995), all U.S. Government End Users acquire the
 # source code with only those rights set forth herein.
 
 # =========================================================================
